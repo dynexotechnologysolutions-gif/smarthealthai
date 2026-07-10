@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { auth } from "../firebase";
@@ -8,10 +9,16 @@ import { getUserProfile } from "../services/firestore";
 function Login() {
     const navigate = useNavigate();
 
+    const { t, i18n } = useTranslation();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+
+    const changeLanguage = (e) => {
+        i18n.changeLanguage(e.target.value);
+    };
 
     async function handleLogin(e) {
         e.preventDefault();
@@ -83,7 +90,7 @@ function Login() {
                             marginBottom: "15px",
                         }}
                     >
-                        🏥 Smart Health AI
+                        🏥 {t("smartHealth")}
                     </h1>
 
                     <h2
@@ -92,7 +99,7 @@ function Login() {
                             fontWeight: "600",
                         }}
                     >
-                        Government of NCT of Delhi
+                        {t("government")}
                     </h2>
 
                     <h3
@@ -102,7 +109,7 @@ function Login() {
                             fontWeight: "400",
                         }}
                     >
-                        Department of Health & Family Welfare
+                        {t("department")}
                     </h3>
 
                     <div
@@ -118,7 +125,7 @@ function Login() {
                                 marginTop: 0,
                             }}
                         >
-                            Delhi District Health Monitoring Dashboard
+                            {t("dashboardTitle")}
                         </h2>
 
                         <p
@@ -127,14 +134,11 @@ function Login() {
                                 lineHeight: "32px",
                             }}
                         >
-                            Live AI Monitoring of Government Hospitals,
-                            Community Health Centres (CHCs) and
-                            Primary Health Centres (PHCs)
-                            across all 13 districts of Delhi.
+                            {t("liveMonitoringDescription")}
                         </p>
                     </div>
 
-                    <h3>Platform Features</h3>
+                    <h3>{t("platformFeatures")}</h3>
 
                     <ul
                         style={{
@@ -142,14 +146,14 @@ function Login() {
                             fontSize: "18px",
                         }}
                     >
-                        <li>✔ AI-powered Risk Prediction</li>
-                        <li>✔ Medicine Stock Monitoring</li>
-                        <li>✔ Diagnostic Test Availability</li>
-                        <li>✔ Patient Footfall Analytics</li>
-                        <li>✔ Bed Occupancy Tracking</li>
-                        <li>✔ Emergency Alerts</li>
-                        <li>✔ District-Level Live Dashboard</li>
-                        <li>✔ Google Gemini AI Recommendations</li>
+                        <li>✔ {t("riskPrediction")}</li>
+                        <li>✔ {t("medicineStockMonitoring")}</li>
+                        <li>✔ {t("diagnosticAvailability")}</li>
+                        <li>✔ {t("patientAnalytics")}</li>
+                        <li>✔ {t("bedTracking")}</li>
+                        <li>✔ {t("emergencyAlerts")}</li>
+                        <li>✔ {t("districtDashboard")}</li>
+                        <li>✔ {t("geminiRecommendations")}</li>
                     </ul>
                 </div>
 
@@ -163,13 +167,39 @@ function Login() {
                         justifyContent: "center",
                     }}
                 >
+
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            marginBottom: "20px",
+                        }}
+                    >
+                        <select
+                            value={i18n.language}
+                            onChange={changeLanguage}
+                            style={{
+                                padding: "8px",
+                                borderRadius: "8px",
+                                fontSize: "15px",
+                            }}
+                        >
+                            <option value="en">🇬🇧 English</option>
+                            <option value="hi">🇮🇳 हिन्दी</option>
+                            <option value="ta">🇮🇳 தமிழ்</option>
+                            <option value="te">🇮🇳 తెలుగు</option>
+                            <option value="ml">🇮🇳 മലയാളം</option>
+                            <option value="kn">🇮🇳 ಕನ್ನಡ</option>
+                        </select>
+                    </div>
+
                     <h2
                         style={{
                             marginBottom: "10px",
                             color: "#1565c0",
                         }}
                     >
-                        🔐 Authorized Login
+                        🔐 {t("authorizedLogin")}
                     </h2>
 
                     <p
@@ -178,13 +208,12 @@ function Login() {
                             marginBottom: "35px",
                         }}
                     >
-                        Government Health Worker / District Administrator
+                        {t("loginSubtitle")}
                     </p>
-
                     <form onSubmit={handleLogin}>
                         <input
                             type="email"
-                            placeholder="Official Email"
+                            placeholder={t("officialEmail")}
                             value={email}
                             onChange={(e) =>
                                 setEmail(e.target.value)
@@ -201,7 +230,7 @@ function Login() {
 
                         <input
                             type="password"
-                            placeholder="Password"
+                            placeholder={t("password")}
                             value={password}
                             onChange={(e) =>
                                 setPassword(e.target.value)
@@ -231,8 +260,8 @@ function Login() {
                             }}
                         >
                             {loading
-                                ? "Authenticating..."
-                                : "Login"}
+                                ? t("authenticating")
+                                : t("login")}
                         </button>
                     </form>
 
@@ -256,12 +285,11 @@ function Login() {
                             color: "#666",
                         }}
                     >
-                        <strong>Powered By</strong>
+                        <strong>{t("poweredByTitle")}</strong>
 
                         <br />
 
-                        Firebase Authentication • Cloud Firestore •
-                        Google Gemini AI
+                        {t("poweredBy")}
                     </div>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
+import { useTranslation } from "react-i18next";
 
 import {
     collection,
@@ -11,7 +12,12 @@ import {
 
 
 function AdminDashboard() {
+    const { t, i18n } = useTranslation();
 
+    const changeLanguage = (e) => {
+        i18n.changeLanguage(e.target.value);
+    };
+    const [selectedLanguage, setSelectedLanguage] = useState("English");
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
     const [warnings, setWarnings] = useState([]);
@@ -151,29 +157,51 @@ function AdminDashboard() {
             >
 
                 <h1>
-                    🏥 Smart Health AI
+                    🏥 {t("smartHealth")}
                 </h1>
-
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginBottom: "15px"
+                    }}
+                >
+                    <select
+                        value={i18n.language}
+                        onChange={changeLanguage}
+                        style={{
+                            padding: "8px",
+                            borderRadius: "6px",
+                            fontSize: "16px"
+                        }}
+                    >
+                        <option value="en">English</option>
+                        <option value="hi">हिन्दी</option>
+                        <option value="ta">தமிழ்</option>
+                        <option value="te">తెలుగు</option>
+                        <option value="ml">മലയാളം</option>
+                        <option value="kn">ಕನ್ನಡ</option>
+                    </select>
+                </div>
 
                 <h2>
-                    Government of NCT of Delhi
+                    {t("government")}
                 </h2>
 
 
                 <h3>
-                    Department of Health & Family Welfare
+                    {t("department")}
                 </h3>
 
 
                 <p>
-                    Delhi District Health Monitoring Dashboard
+                    {t("dashboardTitle")}
                 </p>
 
 
                 <p>
-                    Live AI Monitoring of Hospitals, CHCs and PHCs across all 13 districts
+                    {t("liveMonitoringDescription")}
                 </p>
-
 
             </header>
 
@@ -192,13 +220,13 @@ function AdminDashboard() {
 
 
                 <div className="card">
-                    <h2>🏥 Facilities</h2>
+                    <h2>{t("facilities")}</h2>
                     <h1>{reports.length}</h1>
                 </div>
 
 
                 <div className="card">
-                    <h2>🚨 Critical Alerts</h2>
+                    <h2>🚨  {t("criticalAlerts")}</h2>
                     <h1>
                         {
                             reports.filter(
@@ -210,7 +238,7 @@ function AdminDashboard() {
 
 
                 <div className="card">
-                    <h2>🤖 AI Analysed</h2>
+                    <h2>{t("aiAnalysed")} AI Analysed</h2>
                     <h1>
                         {
                             reports.filter(
@@ -222,7 +250,7 @@ function AdminDashboard() {
 
 
                 <div className="card">
-                    <h2>💊 Medicine Issues</h2>
+                    <h2>💊 {t("medicineIssues")}</h2>
                     <h1>
                         {
                             reports.filter(
@@ -251,7 +279,7 @@ function AdminDashboard() {
             >
 
                 <h2 style={{ color: "#dc2626" }}>
-                    🚨 Real-Time AI Early Warning Panel
+                    🚨{t("earlyWarningPanel")}
                 </h2>
 
 
@@ -384,9 +412,8 @@ function AdminDashboard() {
 
 
             <h2>
-                📍 Facility Intelligence Map
+                📍 {t("facilityMap")}
             </h2>
-
 
 
             {
@@ -604,7 +631,7 @@ function AdminDashboard() {
 
 
                         <h3>
-                            📈 AI Demand Forecast (Next 7 Days)
+                            {t("demandForecast")} (Next 7 Days)
                         </h3>
 
 

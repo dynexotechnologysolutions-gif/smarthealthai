@@ -16,33 +16,58 @@ def home():
 @app.route("/analyze-pending")
 def analyze_pending():
 
-    reports = (
-        db.collection("facilityReports")
-        .where("status", "==", "pending_ai")
-        .stream()
-    )
+    reports = db.collection("facilityReports").stream()
 
     processed = 0
+
+    language_map = {
+        "en": "English",
+        "hi": "Hindi",
+        "ta": "Tamil",
+        "te": "Telugu",
+        "ml": "Malayalam",
+        "kn": "Kannada"
+    }
 
     for doc in reports:
 
         report = doc.to_dict()
 
-        print(f"Analyzing report: {doc.id}")
+        print("--------------------------------")
+        print("Document:", doc.id)
+        print("Status:", report.get("status"))
 
-        analysis = analyze_report(report)
+        if report.get("status") != "pending_ai":
+            continue
+
+        selected_language = language_map.get(
+            report.get("language", "en"),
+            "English"
+        )
+
+        print("Analyzing report:", doc.id)
+        print("Selected Language:", selected_language)
+
+        analysis = analyze_report(
+            report,
+            selected_language
+        )
 
         db.collection("facilityReports").document(doc.id).update({
 
-            # Existing AI Fields
+            # AI Result
             "aiRisk": analysis.get("risk"),
             "aiSummary": analysis.get("summary"),
             "aiRecommendation": analysis.get("recommendation"),
             "confidence": analysis.get("confidence"),
 
-            # NEW AI Features
-            "aiEarlyWarnings": analysis.get("earlyWarnings", []),
+            # Early Warnings
+            "aiEarlyWarnings": analysis.get(
+                "earlyWarnings",
+                []
+            ),
 
+            # Demand Forecast
             "aiDemandForecast": analysis.get(
                 "demandForecast",
                 {
@@ -52,6 +77,7 @@ def analyze_pending():
                 }
             ),
 
+            # Resource Redistribution
             "aiResourceRedistribution": analysis.get(
                 "resourceRedistribution",
                 {
@@ -60,13 +86,14 @@ def analyze_pending():
                 }
             ),
 
+            # District Priority
             "aiDistrictPriority": analysis.get(
                 "districtPriority",
                 ""
             ),
 
+            # Mark Complete
             "status": "completed"
-
         })
 
         processed += 1
@@ -82,4 +109,4 @@ if __name__ == "__main__":
         host="127.0.0.1",
         port=5000,
         debug=True
-    ) 
+    )

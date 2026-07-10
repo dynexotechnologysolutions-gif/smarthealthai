@@ -1,5 +1,6 @@
 import { auth } from "../firebase";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { onAuthStateChanged } from "firebase/auth";
 import healthBg from "../assets/health-bg.jpg";
 import {
@@ -8,6 +9,12 @@ import {
 } from "../services/firestore";
 
 function HealthWorker() {
+    const { t, i18n } = useTranslation();
+
+    const changeLanguage = (e) => {
+        i18n.changeLanguage(e.target.value);
+    };
+
     const [profile, setProfile] = useState(null);
 
     const [patientsToday, setPatientsToday] = useState("");
@@ -63,6 +70,9 @@ function HealthWorker() {
                 facility: profile.facility,
                 district: profile.district,
                 worker: profile.name,
+
+                language: i18n.language,
+
                 patientsToday: Number(patientsToday),
                 availableBeds: Number(availableBeds),
 
@@ -73,10 +83,12 @@ function HealthWorker() {
                     currentStock: Number(currentStock),
                     minimumStock: Number(minimumStock),
                 },
+
                 testAvailability: {
                     name: testName,
                     status: testAvailability,
                 },
+
                 emergencyLevel,
 
                 note,
@@ -144,7 +156,7 @@ function HealthWorker() {
                     }}
                 >
                     <h1 style={{ margin: 0 }}>
-                        🏥 Smart Health AI
+                        🏥 {t("smartHealth")}
                     </h1>
 
                     <h2 style={{ marginTop: 10 }}>
@@ -152,7 +164,7 @@ function HealthWorker() {
                     </h2>
 
                     <h3 style={{ fontWeight: "400" }}>
-                        Department of Health & Family Welfare
+                        {t("department")}
                     </h3>
 
                     <h2>
@@ -175,9 +187,9 @@ function HealthWorker() {
                         fontSize: "18px",
                     }}
                 >
-                    <div>🟢 Firebase Connected</div>
-                    <div>🤖 Gemini AI Active</div>
-                    <div>⚡ Live Monitoring</div>
+                    <div>🟢 {t("firebaseConnected")}</div>
+                    <div>🤖 {t("geminiActive")}</div>
+                    <div>⚡ {t("liveMonitoring")}</div>
                 </div>
                 <div
                     style={{
@@ -196,7 +208,7 @@ function HealthWorker() {
                             boxShadow: "0 10px 25px rgba(21,101,192,.18)"
                         }}
                     >
-                        <h3>👤 Health Worker</h3>
+                        <h3>{t("name")}</h3>
                         <h2
                             style={{
                                 color: "#1565C0",
@@ -204,7 +216,7 @@ function HealthWorker() {
                                 marginTop: 10
                             }}
                         >
-                            {profile.worker || profile.name}
+                            {t(profile.worker || profile.name)}
                         </h2>
                     </div>
 
@@ -216,14 +228,14 @@ function HealthWorker() {
                             boxShadow: "0 10px 25px rgba(21,101,192,.18)"
                         }}
                     >
-                        <h3>🏥 Facility</h3>
+                        <h3>🏥 {t("facility")}</h3>
                         <h2
                             style={{
                                 color: "#0D47A1",
                                 fontSize: "28px"
                             }}
                         >
-                            {profile.facility}
+                            {t(profile.facility)}
                         </h2>
                     </div>
 
@@ -235,14 +247,14 @@ function HealthWorker() {
                             boxShadow: "0 10px 25px rgba(21,101,192,.18)"
                         }}
                     >
-                        <h3>📍 District</h3>
+                        <h3>📍 {t("district")}</h3>
                         <h2
                             style={{
                                 color: "#2E7D32",
                                 fontSize: "28px"
                             }}
                         >
-                            {profile.district}
+                            {t(profile.district)}
                         </h2>
                     </div>
 
@@ -254,12 +266,12 @@ function HealthWorker() {
                         marginTop: 35
                     }}
                 >
-                    📊 Daily Operations
+                    📊 {t("dailyOperations")}
                 </h2>
 
                 <input
                     type="number"
-                    placeholder="Patients Seen Today"
+                    placeholder={t("patientsToday")}
                     value={patientsToday}
                     onChange={(e) => setPatientsToday(e.target.value)}
                     style={{
@@ -271,7 +283,7 @@ function HealthWorker() {
 
                 <input
                     type="number"
-                    placeholder="Available Beds"
+                    placeholder={t("availableBeds")}
                     value={availableBeds}
                     onChange={(e) => setAvailableBeds(e.target.value)}
                     style={{
@@ -290,12 +302,12 @@ function HealthWorker() {
                         marginBottom: "20px",
                     }}
                 >
-                    <option>Yes</option>
-                    <option>No</option>
+                    <option>{t("yes")}</option>
+                    <option>{t("no")}</option>
                 </select>
 
                 <h2 style={{ color: "#1565C0" }}>
-                    💊 Medicine Inventory Management
+                    💊 {t("medicineInventory")}
                 </h2>
 
 
@@ -386,7 +398,7 @@ function HealthWorker() {
 
                 <input
                     type="number"
-                    placeholder="Current Stock"
+                    placeholder={t("currentStock")}
                     value={currentStock}
                     onChange={(e) => setCurrentStock(e.target.value)}
                     style={{
@@ -398,7 +410,7 @@ function HealthWorker() {
 
                 <input
                     type="number"
-                    placeholder="Minimum Required Stock"
+                    placeholder={t("minimumStock")}
                     value={minimumStock}
                     onChange={(e) => setMinimumStock(e.target.value)}
                     style={{
@@ -411,7 +423,7 @@ function HealthWorker() {
                 <hr />
 
                 <h2 style={{ color: "#1565C0" }}>
-                    🧪 Diagnostic Test Availability
+                    🧪 {t("diagnosticTests")}
                 </h2>
 
                 <label>Select Test</label>
@@ -464,7 +476,7 @@ function HealthWorker() {
                 </select>
 
                 <h2 style={{ color: "#1565C0" }}>
-                    🚨 Emergency Monitoring
+                    🚨 {t("emergencyMonitoring")}
                 </h2>
 
                 <select
@@ -482,12 +494,12 @@ function HealthWorker() {
                 </select>
 
                 <h2 style={{ color: "#1565C0" }}>
-                    📝 Situation Report
+                    📝 {t("situationReport")}
                 </h2>
 
                 <textarea
                     rows={5}
-                    placeholder="Describe the current situation..."
+                    placeholder={t("describeSituation")}
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     style={{
@@ -513,8 +525,8 @@ function HealthWorker() {
                     }}
                 >
                     {submitting
-                        ? "🚀 Uploading Live Report..."
-                        : "🚀 Submit Live Health Report"}
+                        ? `🚀 ${t("uploadingReport")}`
+                        : `🚀 ${t("submitReport")}`}
                 </button>
 
                 <hr style={{ marginTop: "50px" }} />
@@ -526,12 +538,12 @@ function HealthWorker() {
                         color: "#777"
                     }}
                 >
-                    <h3>Government of NCT of Delhi</h3>
+                    <h3>{t("government")}</h3>
 
                     <p>Smart Health AI</p>
 
                     <p>
-                        Powered by Firebase • Cloud Firestore • Google Gemini AI
+                        {t("poweredBy")}
                     </p>
                 </div>
 

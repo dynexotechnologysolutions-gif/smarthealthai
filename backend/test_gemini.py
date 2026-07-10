@@ -1,14 +1,46 @@
-import os
-from dotenv import load_dotenv
-from google import genai
+import json
 
-load_dotenv()
+from gemini_service import analyze_report
 
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents="Say Hello"
+test_report = {
+
+    "facility": "Burari PHC",
+
+    "district": "Central Delhi",
+
+    "patientsToday": 100,
+
+    "availableBeds": 80,
+
+    "doctorPresent": True,
+
+    "medicine": {
+        "name": "Aspirin",
+        "currentStock": 50,
+        "minimumStock": 500
+    },
+
+    "testAvailability": {
+        "name": "CBC",
+        "status": "Available"
+    }
+
+}
+
+
+# Test Tamil output
+
+result = analyze_report(
+    test_report,
+    "Tamil"
 )
 
-print(response.text)
+
+print(
+    json.dumps(
+        result,
+        indent=4,
+        ensure_ascii=False
+    )
+)
